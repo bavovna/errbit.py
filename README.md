@@ -7,6 +7,7 @@ Alternatively, you can use [Airbrakepy](https://github.com/pulseenergy/airbrakep
 Usage:
 ------
 
+    ERRBIT_URL = "http://myerrbit.example.com/notifier_api/v2/notices"
     client = ErrbitClient(
         ERRBIT_URL,
         ERRBIT_KEY,
@@ -15,6 +16,7 @@ Usage:
         environment="production"
        )
     client.log(exception)
+    
 
 Contribute
 ----------
