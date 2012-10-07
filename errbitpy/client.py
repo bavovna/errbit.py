@@ -7,12 +7,15 @@ import xmlbuilder
 
 app_name='ErrbitPy'
 version='0.0.1'
-source_url='http://github.com/mkorenkov/errbitpy'
+source_url='http://github.com/mkorenkov/errbit.py'
 
 def log_error(method):
-    def wrap_error():
+    def wrap_error(*args, **kwargs):
         try:
-            method()
+            if len(kwargs):
+                method(**kwargs)
+            else:
+                method(*args)
         except Exception, e:
             logger = logging.getLogger(__name__)
             logger.setLevel(logging.ERROR)
@@ -21,10 +24,22 @@ def log_error(method):
     wrap_error.__name__ = method.__name__
     return wrap_error
 
-class MyHandler(urllib2.HTTPHandler):
+class ThreadedRequest(threading.Thread):
+    def __init__(self, url, message, headers):
+        super(ThreadedRequest, self).__init__()
+        self.url = url
+        self.message = message
+        self.headers = headers
+
     @log_error
-    def http_response(self, req, response):
-        status = response.getcode
+    def run(self):
+        request = urllib2.Request(self.url, self.message, self.headers)
+        try:
+            response = urllib2.urlopen(request, timeout=30)
+            status = response.getcode()
+        except urllib2.HTTPError as e:
+            status = e.code
+
         if status == 200:
             return
 
@@ -51,13 +66,11 @@ class ErrbitClient:
 
     @log_error
     def log(self, exception):
-        message = self._generate_xml(exception, sys.exc_info())
+        message = self._generate_xml(exception, sys.exc_info()[2])
         self._sendMessage(message)
 
     def _sendHttpRequest(self, headers, message):
-        o = urllib2.build_opener(MyHandler())
-        o.addheaders(headers)
-        t = threading.Thread(target=o.open, args=(self.service_url, message))
+        t = ThreadedRequest(self.service_url, message, headers)
         t.start()
 
     def _sendMessage(self, message):
