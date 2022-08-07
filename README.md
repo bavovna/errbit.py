@@ -1,24 +1,7 @@
 errbit.py
 =========
 
-Open source error catcher [Errbit](https://github.com/errbit/errbit) thin client. 
-Alternatively, you can use [Airbrakepy](https://github.com/pulseenergy/airbrakepy) if you like `logging` approach.
+Python client for [Errbit](https://github.com/errbit/errbit). This repo has been [migrated off GitHub](https://gitlab.com/dead-code/errbit.py) due to GitHub weak statement in regards to russian attack on :ukraine:.
+Continuing doing business as usual with :ru: is simply unacceptible, and $100k one time donation does not fix that.
 
-Usage:
-------
-
-    ERRBIT_URL = "http://myerrbit.example.com/notifier_api/v2/notices"
-    client = ErrbitClient(
-        ERRBIT_URL,
-        ERRBIT_KEY,
-        component="django",
-        node=socket.gethostname(),
-        environment="production"
-       )
-    client.log(exception)
-    
-
-Contribute
-----------
-
-This project needs love. Please, contribute.
+![UA flag](/images/mariupol.jpg)
